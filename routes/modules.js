@@ -10,7 +10,7 @@ const isAuthenticated = require('../middleware/is-authenticated');
 const router = Router();
 
 // register a module with version
-router.post('/:namespace/:name/:provider/:version', (req, res, next) => {
+router.post('/:namespace/:name/:provider/:version', isAuthenticated, (req, res, next) => {
   const {
     namespace,
     name,
