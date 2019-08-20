@@ -8,7 +8,6 @@ const router = Router();
 
 // https://www.terraform.io/docs/registry/api.html#download-source-code-for-a-specific-module-version
 router.get('/:namespace/:name/:provider/:version/download', isAuthenticated, async (req, res, next) => {
-
   const options = { ...req.params };
 
   const module = await findOne(options);
