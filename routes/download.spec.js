@@ -1,18 +1,31 @@
 const request = require('supertest');
-const { expect } = require('chai');
+const {
+  expect,
+} = require('chai');
 const fs = require('fs');
 const path = require('path');
-const { promisify } = require('util');
+const {
+  promisify,
+} = require('util');
 const rimraf = promisify(require('rimraf'));
 
 const app = require('../app');
-const { deleteDbAll } = require('../test/helper');
-const { db, save } = require('../lib/store');
+const {
+  deleteDbAll,
+} = require('../test/helper');
+const {
+  db,
+  save,
+} = require('../lib/store');
 
 describe('GET /v1/modules/:namespace/:name/:provider/:version/download', () => {
   before(async () => {
     await save({
-      namespace: 'download', name: 'source', provider: 'aws', version: '1.2.0', location: 'download/source/aws/1.2.0/module.tar.gz',
+      namespace: 'download',
+      name: 'source',
+      provider: 'aws',
+      version: '1.2.0',
+      location: 'download/source/aws/1.2.0/module.tar.gz',
     });
   });
 
@@ -40,10 +53,18 @@ describe('GET /v1/modules/:namespace/:name/:provider/:version/download', () => {
 describe('GET /v1/modules/:namespace/:name/:provider/download', () => {
   before(async () => {
     await save({
-      namespace: 'download', name: 'source', provider: 'aws', version: '1.2.0', location: 'download/source/aws/1.2.0/module.tar.gz',
+      namespace: 'download',
+      name: 'source',
+      provider: 'aws',
+      version: '1.2.0',
+      location: 'download/source/aws/1.2.0/module.tar.gz',
     });
     await save({
-      namespace: 'download', name: 'source', provider: 'aws', version: '1.3.0', location: 'download/source/aws/1.3.0/module.tar.gz',
+      namespace: 'download',
+      name: 'source',
+      provider: 'aws',
+      version: '1.3.0',
+      location: 'download/source/aws/1.3.0/module.tar.gz',
     });
   });
 
@@ -101,7 +122,9 @@ describe('GET /v1/modules/tarball/:namespace/:name/:provider/*.tar.gz', () => {
           provider: 'aws',
           version: `${version}`,
         }, (err, docs) => {
-          if (err) { return done(err); }
+          if (err) {
+            return done(err);
+          }
           expect(docs[0]).to.have.property('downloads').to.equal(1);
           return done();
         });

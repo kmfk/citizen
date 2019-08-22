@@ -1,8 +1,12 @@
 const AWS = require('aws-sdk');
-const { promisify } = require('util');
+const {
+  promisify,
+} = require('util');
 const debug = require('debug')('citizen:server');
 
-const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
+const s3 = new AWS.S3({
+  apiVersion: '2006-03-01',
+});
 
 const S3_BUCKET = process.env.CITIZEN_AWS_S3_BUCKET;
 if (process.env.CITIZEN_STORAGE === 's3' && !S3_BUCKET) {
@@ -19,8 +23,12 @@ module.exports = {
   saveModule: async (path, tarball) => {
     debug(`save the module into ${path}.`);
 
-    if (!path) { throw new Error('path is required.'); }
-    if (!tarball) { throw new Error('tarball is required.'); }
+    if (!path) {
+      throw new Error('path is required.');
+    }
+    if (!tarball) {
+      throw new Error('tarball is required.');
+    }
 
     const params = {
       Bucket: S3_BUCKET,

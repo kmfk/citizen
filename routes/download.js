@@ -1,13 +1,23 @@
-const { Router } = require('express');
+const {
+  Router,
+} = require('express');
 
-const { findOne, getLatestVersion, increaseDownload } = require('../lib/store');
-const { getModule } = require('../lib/storage');
+const {
+  findOne,
+  getLatestVersion,
+  increaseDownload,
+} = require('../lib/store');
+const {
+  getModule,
+} = require('../lib/storage');
 
 const router = Router();
 
 // https://www.terraform.io/docs/registry/api.html#download-source-code-for-a-specific-module-version
 router.get('/:namespace/:name/:provider/:version/download', async (req, res, next) => {
-  const options = { ...req.params };
+  const options = {
+    ...req.params,
+  };
 
   const module = await findOne(options);
 
@@ -21,7 +31,9 @@ router.get('/:namespace/:name/:provider/:version/download', async (req, res, nex
 
 // https://www.terraform.io/docs/registry/api.html#download-the-latest-version-of-a-module
 router.get('/:namespace/:name/:provider/download', async (req, res, next) => {
-  const options = { ...req.params };
+  const options = {
+    ...req.params,
+  };
 
   const module = await getLatestVersion(options);
 
@@ -35,7 +47,9 @@ router.get('/:namespace/:name/:provider/download', async (req, res, next) => {
 
 // download a module
 router.get('/tarball/:namespace/:name/:provider/:version/*.tar.gz', async (req, res, next) => {
-  const options = { ...req.params };
+  const options = {
+    ...req.params,
+  };
 
   const module = await findOne(options);
 

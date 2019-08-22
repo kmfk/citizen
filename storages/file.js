@@ -1,6 +1,11 @@
 const fs = require('fs');
-const { join, parse } = require('path');
-const { promisify } = require('util');
+const {
+  join,
+  parse,
+} = require('path');
+const {
+  promisify,
+} = require('util');
 const debug = require('debug')('citizen:server');
 const mkdirp = promisify(require('mkdirp'));
 
@@ -11,8 +16,12 @@ const access = promisify(fs.access);
 module.exports = {
   type: () => 'file',
   saveModule: async (path, tarball) => {
-    if (!path) { throw new Error('path is required.'); }
-    if (!tarball) { throw new Error('tarball is required.'); }
+    if (!path) {
+      throw new Error('path is required.');
+    }
+    if (!tarball) {
+      throw new Error('tarball is required.');
+    }
 
     const pathToStore = join(process.env.CITIZEN_STORAGE_PATH, path);
     debug(`save the module into ${pathToStore}.`);

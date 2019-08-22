@@ -1,8 +1,15 @@
-const { Router } = require('express');
+const {
+  Router,
+} = require('express');
 const _ = require('lodash');
 
-const { findAll, getVersions } = require('../lib/store');
-const { makeUrl } = require('../lib/util');
+const {
+  findAll,
+  getVersions,
+} = require('../lib/store');
+const {
+  makeUrl,
+} = require('../lib/util');
 
 const router = Router();
 
@@ -42,7 +49,9 @@ router.get('/search', async (req, res) => {
 
 // https://www.terraform.io/docs/registry/api.html#list-modules
 router.get(['/', '/:namespace'], async (req, res) => {
-  const options = { ...req.query };
+  const options = {
+    ...req.query,
+  };
   if (req.params.namespace) {
     options.namespace = req.params.namespace;
   }
@@ -59,7 +68,9 @@ router.get(['/', '/:namespace'], async (req, res) => {
 
 // https://www.terraform.io/docs/registry/api.html#list-available-versions-for-a-specific-module
 router.get('/:namespace/:name/:provider/versions', async (req, res, next) => {
-  const options = { ...req.params };
+  const options = {
+    ...req.params,
+  };
 
   try {
     const versions = await getVersions(options);
@@ -106,7 +117,10 @@ router.get('/:namespace/:name', async (req, res) => {
       limit,
       currentOffset: offset,
       nextOffset: hasNext ? nextOffset : null,
-      nextUrl: hasNext ? makeUrl(req, { limit, offset: nextOffset }) : null,
+      nextUrl: hasNext ? makeUrl(req, {
+        limit,
+        offset: nextOffset,
+      }) : null,
     },
     modules: pagedModules,
   });

@@ -1,14 +1,23 @@
 const request = require('supertest');
-const { expect } = require('chai');
-const { promisify } = require('util');
+const {
+  expect,
+} = require('chai');
+const {
+  promisify,
+} = require('util');
 const rimraf = promisify(require('rimraf'));
 const fs = require('fs');
 const path = require('path');
 const mkdirp = promisify(require('mkdirp'));
 
 const app = require('../app');
-const { deleteDbAll } = require('../test/helper');
-const { db, save } = require('../lib/store');
+const {
+  deleteDbAll,
+} = require('../test/helper');
+const {
+  db,
+  save,
+} = require('../lib/store');
 
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
@@ -64,36 +73,16 @@ describe('POST /v1/modules/:namespace/:name/:provider/:version', () => {
       expect(res.body).to.have.property('modules').to.be.an('array');
       expect(res.body.modules[0]).to.have.property('id').to.equal(modulePath);
     }));
-
-  it('should register module information', (done) => {
-    request(app)
-      .post(`/v1/modules/${modulePath}`)
-      .attach('module', 'test/fixture/complex.tar.gz')
-      .expect('Content-Type', /application\/json/)
-      .expect(201)
-      .then((res) => {
-        db.find({
-          namespace: res.body.modules[0].namespace,
-          name: res.body.modules[0].name,
-          provider: res.body.modules[0].provider,
-          version: res.body.modules[0].version,
-        }, (err, docs) => {
-          if (err) { return done(err); }
-
-          expect(docs[0]).to.have.property('root');
-          expect(docs[0].root).to.have.property('name').to.equal('consul');
-          expect(docs[0]).to.have.property('submodules').to.be.an.instanceof(Array);
-          expect(docs[0].submodules).to.have.lengthOf(3);
-          return done();
-        });
-      });
-  });
 });
 
 describe('GET /v1/modules/:namespace/:name/:provider/:version', () => {
   before(async () => {
     await save({
-      namespace: 'router', name: 'specific', provider: 'aws', version: '1.1.2', owner: '',
+      namespace: 'router',
+      name: 'specific',
+      provider: 'aws',
+      version: '1.1.2',
+      owner: '',
     });
   });
 
@@ -119,10 +108,34 @@ describe('GET /v1/modules/:namespace/:name/:provider/:version', () => {
 describe('GET /v1/modules/:namespace/:name/:provider', () => {
   before(async () => {
     await save({
-      namespace: 'router', name: 'latest', provider: 'aws', version: '1.1.1', owner: '', definition: { root: { name: 'latest' }, submodules: [{ name: 'example' }] },
+      namespace: 'router',
+      name: 'latest',
+      provider: 'aws',
+      version: '1.1.1',
+      owner: '',
+      definition: {
+        root: {
+          name: 'latest',
+        },
+        submodules: [{
+          name: 'example',
+        }],
+      },
     });
     await save({
-      namespace: 'router', name: 'latest', provider: 'aws', version: '1.1.2', owner: '', definition: { root: { name: 'latest' }, submodules: [{ name: 'example' }] },
+      namespace: 'router',
+      name: 'latest',
+      provider: 'aws',
+      version: '1.1.2',
+      owner: '',
+      definition: {
+        root: {
+          name: 'latest',
+        },
+        submodules: [{
+          name: 'example',
+        }],
+      },
     });
   });
 
