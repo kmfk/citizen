@@ -3,12 +3,14 @@ const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const bearerToken = require('express-bearer-token');
 
 const logger = require('./lib/logger');
 
 const app = express();
 
 app.use(helmet());
+app.use(bearerToken());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

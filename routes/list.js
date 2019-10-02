@@ -3,11 +3,12 @@ const _ = require('lodash');
 
 const { findAll, getVersions } = require('../lib/store');
 const { makeUrl } = require('../lib/util');
+const isAuthenticated = require('../middleware/is-authenticated');
 
 const router = Router();
 
 // https://www.terraform.io/docs/registry/api.html#search-modules
-router.get('/search', async (req, res) => {
+router.get('/search', isAuthenticated, async (req, res) => {
   if (!req.query.q) {
     return res.status(400).render('error', {
       message: 'q parameter required.',
@@ -41,7 +42,7 @@ router.get('/search', async (req, res) => {
 });
 
 // https://www.terraform.io/docs/registry/api.html#list-modules
-router.get(['/', '/:namespace'], async (req, res) => {
+router.get(['/', '/:namespace'], isAuthenticated, async (req, res) => {
   const options = { ...req.query };
   if (req.params.namespace) {
     options.namespace = req.params.namespace;
@@ -58,7 +59,7 @@ router.get(['/', '/:namespace'], async (req, res) => {
 });
 
 // https://www.terraform.io/docs/registry/api.html#list-available-versions-for-a-specific-module
-router.get('/:namespace/:name/:provider/versions', async (req, res, next) => {
+router.get('/:namespace/:name/:provider/versions', isAuthenticated, async (req, res, next) => {
   const options = { ...req.params };
 
   try {
@@ -73,7 +74,7 @@ router.get('/:namespace/:name/:provider/versions', async (req, res, next) => {
 });
 
 // https://www.terraform.io/docs/registry/api.html#list-latest-version-of-module-for-all-providers
-router.get('/:namespace/:name', async (req, res) => {
+router.get('/:namespace/:name', isAuthenticated, async (req, res) => {
   const options = {
     offset: 0,
     // FIXME: to support for too many modules
