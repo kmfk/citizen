@@ -1,11 +1,19 @@
-const { Router } = require('express');
+const {
+  Router,
+} = require('express');
 const multiparty = require('multiparty');
 
 const logger = require('../lib/logger');
-const { parseHcl } = require('../lib/util');
-const { saveModule, hasModule } = require('../lib/storage');
-const { save, getLatestVersion, findOne } = require('../lib/store');
 const isAuthenticated = require('../middleware/is-authenticated');
+const {
+  saveModule,
+  hasModule,
+} = require('../lib/storage');
+const {
+  save,
+  getLatestVersion,
+  findOne,
+} = require('../lib/store');
 
 const router = Router();
 
@@ -50,7 +58,9 @@ router.post('/:namespace/:name/:provider/:version', isAuthenticated, (req, res, 
         owner = Buffer.concat(ownerBuf).toString();
       }
       if (part.filename) {
-        ({ filename } = part);
+        ({
+          filename,
+        } = part);
         tarball = Buffer.concat(file);
       }
     });
@@ -67,7 +77,6 @@ router.post('/:namespace/:name/:provider/:version', isAuthenticated, (req, res, 
       }
 
       const fileResult = await saveModule(`${destPath}/${filename}`, tarball);
-      const definition = await parseHcl(name, tarball);
       const metaResult = await save({
         namespace,
         name,
@@ -75,7 +84,6 @@ router.post('/:namespace/:name/:provider/:version', isAuthenticated, (req, res, 
         version,
         owner,
         location: `${destPath}/${filename}`,
-        definition,
       });
 
       if (fileResult && metaResult) {
@@ -102,7 +110,9 @@ router.post('/:namespace/:name/:provider/:version', isAuthenticated, (req, res, 
 
 // https://www.terraform.io/docs/registry/api.html#get-a-specific-module
 router.get('/:namespace/:name/:provider/:version', isAuthenticated, async (req, res, next) => {
-  const options = { ...req.params };
+  const options = {
+    ...req.params,
+  };
 
   const module = await findOne(options);
 
@@ -115,7 +125,9 @@ router.get('/:namespace/:name/:provider/:version', isAuthenticated, async (req, 
 
 // https://www.terraform.io/docs/registry/api.html#latest-version-for-a-specific-module-provider
 router.get('/:namespace/:name/:provider', isAuthenticated, async (req, res, next) => {
-  const options = { ...req.params };
+  const options = {
+    ...req.params,
+  };
 
   const module = await getLatestVersion(options);
 

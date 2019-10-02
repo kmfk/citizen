@@ -1,13 +1,26 @@
 /* eslint-disable no-unused-expressions */
 const path = require('path');
 const fs = require('fs');
-const { expect } = require('chai');
-const { promisify } = require('util');
+const {
+  expect,
+} = require('chai');
+const {
+  promisify,
+} = require('util');
 const AWS = require('aws-sdk');
 
-const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
-const { enableMock, clearMock } = require('../test/helper');
-const { saveModule, hasModule, getModule } = require('./s3');
+const s3 = new AWS.S3({
+  apiVersion: '2006-03-01',
+});
+const {
+  enableMock,
+  clearMock,
+} = require('../test/helper');
+const {
+  saveModule,
+  hasModule,
+  getModule,
+} = require('./s3');
 
 const readFile = promisify(fs.readFile);
 s3.save = promisify(s3.putObject);
@@ -19,7 +32,9 @@ describe('s3\'s', async () => {
   let moduleBuf;
 
   before(async () => {
-    enableMock({ modulePath });
+    enableMock({
+      modulePath,
+    });
     moduleBuf = await readFile(tarballPath);
   });
 

@@ -1,16 +1,31 @@
 const https = require('https');
 const fs = require('fs');
-const { promisify } = require('util');
-const { expect } = require('chai');
+const {
+  promisify,
+} = require('util');
+const {
+  expect,
+} = require('chai');
 const getPort = require('get-port');
-const { execFile } = require('child_process');
-const { join } = require('path');
+const {
+  execFile,
+} = require('child_process');
+const {
+  join,
+} = require('path');
 const rimraf = promisify(require('rimraf'));
 
-const { connect, disconnect } = require('./ngrok');
+const {
+  connect,
+  disconnect,
+} = require('./ngrok');
 const registry = require('./registry');
-const { db } = require('../../lib/store');
-const { deleteDbAll } = require('../helper');
+const {
+  db,
+} = require('../../lib/store');
+const {
+  deleteDbAll,
+} = require('../helper');
 
 const writeFile = promisify(fs.writeFile);
 const unlink = promisify(fs.unlink);
@@ -32,7 +47,9 @@ describe('terraform CLI', () => {
     const download = join(__dirname, 'download-terraform');
 
     execFile(download, async (err) => {
-      if (err) { return done(err); }
+      if (err) {
+        return done(err);
+      }
 
       try {
         const port = await getPort();
@@ -101,7 +118,9 @@ describe('terraform CLI', () => {
     it('cli should connect the registry server with terraform-cli', (done) => {
       const cwd = join(__dirname, 'fixture');
 
-      execFile(terraform, ['get'], { cwd }, (err, stdout, stderr) => {
+      execFile(terraform, ['get'], {
+        cwd,
+      }, (err, stdout, stderr) => {
         expect(stdout).to.include('- module.vpc');
         expect(stderr).to.include('no versions found');
         done();
@@ -121,10 +140,13 @@ describe('terraform CLI', () => {
 
       execFile(
         client,
-        ['publish', 'citizen-test', 'alb', 'aws', '0.1.0'],
-        { cwd: moduleDir },
+        ['publish', 'citizen-test', 'alb', 'aws', '0.1.0'], {
+          cwd: moduleDir,
+        },
         async (err) => {
-          if (err) { return done(err); }
+          if (err) {
+            return done(err);
+          }
 
           const content = definition
             .replace(/__MODULE_ADDRESS__/, `${url.host}/citizen-test/alb/aws`)
@@ -145,8 +167,12 @@ describe('terraform CLI', () => {
     it('should download module from registry', (done) => {
       const cwd = join(__dirname, 'fixture');
 
-      execFile(terraform, ['get'], { cwd }, async (err, stdout) => {
-        if (err) { return done(err); }
+      execFile(terraform, ['get'], {
+        cwd,
+      }, async (err, stdout) => {
+        if (err) {
+          return done(err);
+        }
 
         expect(stdout).to.include('Found version 0.1.0 of citizen-test/alb/aws on');
         expect(stdout).to.include('Getting source');

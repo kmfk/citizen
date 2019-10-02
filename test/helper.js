@@ -1,7 +1,9 @@
 const nock = require('nock');
 
 module.exports = {
-  enableMock: ({ modulePath }) => {
+  enableMock: ({
+    modulePath,
+  }) => {
     if (process.env.CITIZEN_MOCK_ENABLED) {
       nock('https://s3.amazonaws.com')
         .persist()
@@ -16,7 +18,8 @@ module.exports = {
             'Transfer-Encoding', 'chunked',
             'Date', 'Mon, 21 May 2018 13:12:55 GMT',
             'Connection', 'close',
-            'Server', 'AmazonS3'],
+            'Server', 'AmazonS3',
+          ],
         );
 
       nock('https://s3.ap-northeast-1.amazonaws.com')
@@ -30,7 +33,8 @@ module.exports = {
             'Date', 'Sun, 21 Jan 2018 12:50:17 GMT',
             'ETag', '"ed168b6114db5f54d38bb1bd9ba45106"',
             'Content-Length', '0',
-            'Server', 'AmazonS3'],
+            'Server', 'AmazonS3',
+          ],
         )
         .get(`/${process.env.CITIZEN_AWS_S3_BUCKET}/${modulePath}`)
         .reply(
@@ -44,7 +48,8 @@ module.exports = {
             'Accept-Ranges', 'bytes',
             'Content-Type', 'application/octet-stream',
             'Content-Length', '136',
-            'Server', 'AmazonS3'],
+            'Server', 'AmazonS3',
+          ],
         )
         .get(`/${process.env.CITIZEN_AWS_S3_BUCKET}/${modulePath}/wrong`)
         .reply(
@@ -55,7 +60,8 @@ module.exports = {
             'Content-Type', 'application/xml',
             'Transfer-Encoding', 'chunked',
             'Date', 'Sun, 21 Jan 2018 16:47:34 GMT',
-            'Server', 'AmazonS3'],
+            'Server', 'AmazonS3',
+          ],
         )
         .delete(`/${process.env.CITIZEN_AWS_S3_BUCKET}/${modulePath}`)
         .reply(
@@ -64,7 +70,8 @@ module.exports = {
           ['x-amz-id-2', 'S0/qBL0imAEhHXwySaB9UxDzA025VeonKZa7A4lP5LZgDC6jiYRhmb5gpRhbbOO6e+SkfvVSLh0=',
             'x-amz-request-id', 'B9DB7B4B906399D7',
             'Date', 'Sun, 21 Jan 2018 12:50:18 GMT',
-            'Server', 'AmazonS3'],
+            'Server', 'AmazonS3',
+          ],
         );
     }
   },
@@ -74,8 +81,12 @@ module.exports = {
     }
   },
   deleteDbAll: db => new Promise((resolve, reject) => {
-    db.remove({}, { multi: true }, (err, numRemoved) => {
-      if (err) { return reject(err); }
+    db.remove({}, {
+      multi: true,
+    }, (err, numRemoved) => {
+      if (err) {
+        return reject(err);
+      }
       return resolve(numRemoved);
     });
   }),

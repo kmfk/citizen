@@ -1,5 +1,7 @@
 const ngrok = require('ngrok');
-const { parse } = require('url');
+const {
+  parse,
+} = require('url');
 
 const connect = async (port) => {
   const url = await ngrok.connect(port);

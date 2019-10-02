@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-expressions */
-const { expect } = require('chai');
+const {
+  expect,
+} = require('chai');
 
 const {
   db,
@@ -10,7 +12,9 @@ const {
   getLatestVersion,
   increaseDownload,
 } = require('./mongodb');
-const { deleteDbAllMongo } = require('../test/helper');
+const {
+  deleteDbAllMongo,
+} = require('../test/helper');
 
 describe('mongodb store', async () => {
   describe('save()', () => {
@@ -35,16 +39,32 @@ describe('mongodb store', async () => {
   describe('findAll()', () => {
     before(async () => {
       await save({
-        namespace: 'store-GCP', name: 'store-lb-http', provider: 'store-google', version: '1.0.4', owner: '',
+        namespace: 'store-GCP',
+        name: 'store-lb-http',
+        provider: 'store-google',
+        version: '1.0.4',
+        owner: '',
       });
       await save({
-        namespace: 'store-aws-modules', name: 'store-vpc', provider: 'store-aws', version: '1.2.1', owner: '',
+        namespace: 'store-aws-modules',
+        name: 'store-vpc',
+        provider: 'store-aws',
+        version: '1.2.1',
+        owner: '',
       });
       await save({
-        namespace: 'store-aws-modules', name: 'store-vpc', provider: 'store-aws', version: '1.5.0', owner: '',
+        namespace: 'store-aws-modules',
+        name: 'store-vpc',
+        provider: 'store-aws',
+        version: '1.5.0',
+        owner: '',
       });
       await save({
-        namespace: 'store-aws-modules', name: 'store-vpc', provider: 'store-aws', version: '1.5.1', owner: '',
+        namespace: 'store-aws-modules',
+        name: 'store-vpc',
+        provider: 'store-aws',
+        version: '1.5.1',
+        owner: '',
       });
     });
 
@@ -68,14 +88,20 @@ describe('mongodb store', async () => {
     });
 
     it('should support pagination', async () => {
-      const result = await findAll({ offset: 2, limit: 2 });
+      const result = await findAll({
+        offset: 2,
+        limit: 2,
+      });
       expect(result).to.have.property('modules').to.have.lengthOf(2);
       expect(result.modules[0]).to.have.property('namespace').to.equal('store-aws-modules');
       expect(result.modules[0]).to.have.property('version').to.equal('1.5.0');
     });
 
     it('should return pagination information', async () => {
-      const result = await findAll({ offset: 2, limit: 1 });
+      const result = await findAll({
+        offset: 2,
+        limit: 1,
+      });
 
       expect(result).to.have.property('meta');
       expect(result.meta).to.have.property('limit').to.equal(1);
@@ -85,7 +111,10 @@ describe('mongodb store', async () => {
     });
 
     it('should prevOffset pagination information', async () => {
-      const result = await findAll({ offset: 0, limit: 2 });
+      const result = await findAll({
+        offset: 0,
+        limit: 2,
+      });
 
       expect(result.meta).to.have.property('limit').to.equal(2);
       expect(result.meta).to.have.property('currentOffset').to.equal(0);
@@ -94,7 +123,10 @@ describe('mongodb store', async () => {
     });
 
     it('should return pagination information', async () => {
-      const result = await findAll({ offset: 2, limit: 2 });
+      const result = await findAll({
+        offset: 2,
+        limit: 2,
+      });
 
       expect(result.meta).to.have.property('limit').to.equal(2);
       expect(result.meta).to.have.property('currentOffset').to.equal(2);
@@ -114,13 +146,25 @@ describe('mongodb store', async () => {
   describe('getVersions()', () => {
     before(async () => {
       await save({
-        namespace: 'aws-modules', name: 'vpc', provider: 'aws', version: '1.2.1', owner: '',
+        namespace: 'aws-modules',
+        name: 'vpc',
+        provider: 'aws',
+        version: '1.2.1',
+        owner: '',
       });
       await save({
-        namespace: 'aws-modules', name: 'vpc', provider: 'aws', version: '1.5.0', owner: '',
+        namespace: 'aws-modules',
+        name: 'vpc',
+        provider: 'aws',
+        version: '1.5.0',
+        owner: '',
       });
       await save({
-        namespace: 'aws-modules', name: 'vpc', provider: 'aws', version: '1.5.1', owner: '',
+        namespace: 'aws-modules',
+        name: 'vpc',
+        provider: 'aws',
+        version: '1.5.1',
+        owner: '',
       });
     });
 
@@ -142,10 +186,18 @@ describe('mongodb store', async () => {
   describe('getLatestVersion()', () => {
     before(async () => {
       await save({
-        namespace: 'aws-modules', name: 'vpc', provider: 'aws', version: '1.5.0', owner: '',
+        namespace: 'aws-modules',
+        name: 'vpc',
+        provider: 'aws',
+        version: '1.5.0',
+        owner: '',
       });
       await save({
-        namespace: 'aws-modules', name: 'vpc', provider: 'aws', version: '1.5.1', owner: '',
+        namespace: 'aws-modules',
+        name: 'vpc',
+        provider: 'aws',
+        version: '1.5.1',
+        owner: '',
       });
     });
 
@@ -177,7 +229,12 @@ describe('mongodb store', async () => {
   describe('findOne()', () => {
     before(async () => {
       await save({
-        namespace: 'aws-modules', name: 'vpc', provider: 'aws', version: '1.5.1', owner: '', location: 'aws-modules/vpc/aws/1.5.1/module.tar.gz',
+        namespace: 'aws-modules',
+        name: 'vpc',
+        provider: 'aws',
+        version: '1.5.1',
+        owner: '',
+        location: 'aws-modules/vpc/aws/1.5.1/module.tar.gz',
       });
     });
 
@@ -211,7 +268,12 @@ describe('mongodb store', async () => {
   describe('increaseDownload()', () => {
     before(async () => {
       await save({
-        namespace: 'aws-modules', name: 'vpc', provider: 'aws', version: '1.5.1', owner: '', location: 'aws-modules/vpc/aws/1.5.1/module.tar.gz',
+        namespace: 'aws-modules',
+        name: 'vpc',
+        provider: 'aws',
+        version: '1.5.1',
+        owner: '',
+        location: 'aws-modules/vpc/aws/1.5.1/module.tar.gz',
       });
     });
 

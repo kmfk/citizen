@@ -3,18 +3,28 @@ const mongoose = require('mongoose');
 
 const dbUri = process.env.CITIZEN_MONGO_DB_URI || 'mongodb://localhost:27017/citizen';
 
-mongoose.connect(dbUri, { useNewUrlParser: true });
+mongoose.connect(dbUri, {
+  useNewUrlParser: true,
+});
 
 const Module = mongoose.model('Module', {
   namespace: String,
   name: String,
   provider: String,
   version: String,
-  owner: { type: String, default: '' },
+  owner: {
+    type: String,
+    default: '',
+  },
   location: String,
-  definition: mongoose.Schema.Types.Mixed,
-  downloads: { type: Number, default: 0 },
-  published_at: { type: Date, default: Date.now },
+  downloads: {
+    type: Number,
+    default: 0,
+  },
+  published_at: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const db = Module;
@@ -27,7 +37,6 @@ const save = data => new Promise((resolve, reject) => {
     version,
     owner,
     location,
-    definition = {},
   } = data;
 
   const module = new Module({
@@ -37,7 +46,6 @@ const save = data => new Promise((resolve, reject) => {
     provider,
     version,
     location,
-    ...definition,
   });
 
   module.save()
@@ -73,10 +81,18 @@ const findAll = ({
         nextOffset: +offset + +limit,
         prevOffset: +offset - +limit,
       };
-      if (meta.prevOffset < 0) { meta.prevOffset = null; }
-      if (meta.nextOffset >= totalRows) { meta.nextOffset = null; }
+      if (meta.prevOffset < 0) {
+        meta.prevOffset = null;
+      }
+      if (meta.nextOffset >= totalRows) {
+        meta.nextOffset = null;
+      }
 
-      return Module.find(options, null, { sort: '_id', skip: +offset, limit: +limit })
+      return Module.find(options, null, {
+        sort: '_id',
+        skip: +offset,
+        limit: +limit,
+      })
         .then((docs) => {
           debug('search result from db: %o', docs);
           return resolve({
@@ -94,9 +110,15 @@ const getVersions = ({
   name,
   provider,
 } = {}) => new Promise((resolve, reject) => {
-  if (!namespace) { reject(new Error('namespace required.')); }
-  if (!name) { reject(new Error('name required.')); }
-  if (!provider) { reject(new Error('provider required.')); }
+  if (!namespace) {
+    reject(new Error('namespace required.'));
+  }
+  if (!name) {
+    reject(new Error('name required.'));
+  }
+  if (!provider) {
+    reject(new Error('provider required.'));
+  }
 
   const options = {
     namespace,
@@ -105,7 +127,9 @@ const getVersions = ({
   };
 
   debug('search versions in db with %o', options);
-  Module.find(options, null, { sort: '_id' })
+  Module.find(options, null, {
+    sort: '_id',
+  })
     .then((docs) => {
       const data = docs.map(d => ({
         version: d.version,
@@ -123,9 +147,15 @@ const getLatestVersion = async ({
   name,
   provider,
 } = {}) => new Promise((resolve, reject) => {
-  if (!namespace) { reject(new Error('namespace required.')); }
-  if (!name) { reject(new Error('name required.')); }
-  if (!provider) { reject(new Error('provider required.')); }
+  if (!namespace) {
+    reject(new Error('namespace required.'));
+  }
+  if (!name) {
+    reject(new Error('name required.'));
+  }
+  if (!provider) {
+    reject(new Error('provider required.'));
+  }
 
   const options = {
     namespace,
@@ -133,7 +163,10 @@ const getLatestVersion = async ({
     provider,
   };
 
-  Module.find(options, null, { sort: '-version', limit: 1 })
+  Module.find(options, null, {
+    sort: '-version',
+    limit: 1,
+  })
     .then((docs) => {
       debug('search latest version result from db: %o', docs);
       return resolve(docs.length > 0 ? docs[0] : null);
@@ -147,10 +180,18 @@ const findOne = async ({
   provider,
   version,
 } = {}) => new Promise((resolve, reject) => {
-  if (!namespace) { reject(new Error('namespace required.')); }
-  if (!name) { reject(new Error('name required.')); }
-  if (!provider) { reject(new Error('provider required.')); }
-  if (!version) { reject(new Error('version required.')); }
+  if (!namespace) {
+    reject(new Error('namespace required.'));
+  }
+  if (!name) {
+    reject(new Error('name required.'));
+  }
+  if (!provider) {
+    reject(new Error('provider required.'));
+  }
+  if (!version) {
+    reject(new Error('version required.'));
+  }
 
   const options = {
     namespace,
@@ -171,10 +212,18 @@ const increaseDownload = async ({
   provider,
   version,
 } = {}) => new Promise((resolve, reject) => {
-  if (!namespace) { reject(new Error('namespace required.')); }
-  if (!name) { reject(new Error('name required.')); }
-  if (!provider) { reject(new Error('provider required.')); }
-  if (!version) { reject(new Error('version required.')); }
+  if (!namespace) {
+    reject(new Error('namespace required.'));
+  }
+  if (!name) {
+    reject(new Error('name required.'));
+  }
+  if (!provider) {
+    reject(new Error('provider required.'));
+  }
+  if (!version) {
+    reject(new Error('version required.'));
+  }
 
   const options = {
     namespace,
@@ -183,7 +232,13 @@ const increaseDownload = async ({
     version,
   };
 
-  Module.findOneAndUpdate(options, { $inc: { downloads: 1 } }, { new: true })
+  Module.findOneAndUpdate(options, {
+    $inc: {
+      downloads: 1,
+    },
+  }, {
+    new: true,
+  })
     .then(doc => resolve(doc))
     .catch(err => reject(err));
 });
